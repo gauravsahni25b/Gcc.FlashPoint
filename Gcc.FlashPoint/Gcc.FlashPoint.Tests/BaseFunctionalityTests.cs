@@ -20,11 +20,6 @@ namespace Gcc.FlashPoint.Tests
         }
 
         [TestMethod]
-        public void Get丨Request丨Multiple()
-        {
-        }
-
-        [TestMethod]
         public void Post丨Request丨OnlyOnce()
         {
             HttpCallTimeSpanCalculator timeCalculator = new HttpCallTimeSpanCalculator();
@@ -114,6 +109,20 @@ namespace Gcc.FlashPoint.Tests
                 Debug.WriteLine($"Resultant Time : {a}");
                 a.Should().NotBe(new TimeSpan(0));
             });
+            result.Should().HaveCount(2);
+        }
+
+        [TestMethod]
+        public void Get丨Request丨Multiple()
+        {
+            HttpCallTimeSpanCalculator timeCalculator = new HttpCallTimeSpanCalculator();
+            var result = timeCalculator.MeasureNGetCalls("http://designbuilderapi.localtest.me/system/health-check", 2).Result;
+            result.ToList().ForEach(a =>
+            {
+                Debug.WriteLine($"Resultant Time : {a}");
+                a.Should().NotBe(new TimeSpan(0));
+            });
+            result.Should().HaveCount(2);
         }
     }
 }
