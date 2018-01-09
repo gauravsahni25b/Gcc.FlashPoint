@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Gcc.FlashPoint.Tests
 {
     [TestClass]
-    public class BaseFunctionalityTests
+    public class HttpCallTimeSpanCalculatorTests
     {
         [TestMethod]
         public void Get丨Request丨OnlyOnce()
