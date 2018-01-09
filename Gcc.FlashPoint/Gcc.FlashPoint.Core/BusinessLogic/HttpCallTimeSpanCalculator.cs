@@ -11,7 +11,7 @@ namespace Gcc.FlashPoint.Core.BusinessLogic
 {
     public class HttpCallTimeSpanCalculator
     {
-        private HttpClient _client;
+        private readonly HttpClient _client;
 
         public HttpCallTimeSpanCalculator()
         {
@@ -28,8 +28,9 @@ namespace Gcc.FlashPoint.Core.BusinessLogic
             return resultCollection;
         }
 
-        public async Task<IEnumerable<TimeSpan>> MeasureNPostCalls(string path, string[] jsonBodies)
+        public async Task<IEnumerable<TimeSpan>> MeasureNPostCalls(string path, string jsonArray)
         {
+            var jsonBodies = JArray.Parse(jsonArray);
             List<TimeSpan> resultCollection = new List<TimeSpan>();
             for (int i = 0; i < jsonBodies.Count(); i++)
             {
@@ -48,6 +49,7 @@ namespace Gcc.FlashPoint.Core.BusinessLogic
             {
                 return watch.Elapsed;
             }
+            response.Dispose();
             return new TimeSpan(0);
         }
 
@@ -61,6 +63,21 @@ namespace Gcc.FlashPoint.Core.BusinessLogic
             {
                 return watch.Elapsed;
             }
+            response.Dispose();
+            return new TimeSpan(0);
+        }
+
+        public async Task<TimeSpan> MeasurePostCall(string path, JToken jsonBody)
+        {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            HttpResponseMessage response = await _client.PostAsJsonAsync(path, jsonBody);
+            watch.Stop();
+            if (response.IsSuccessStatusCode)
+            {
+                return watch.Elapsed;
+            }
+            response.Dispose();
             return new TimeSpan(0);
         }
     }
