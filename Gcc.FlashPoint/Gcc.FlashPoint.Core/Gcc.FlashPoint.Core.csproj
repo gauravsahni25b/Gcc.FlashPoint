@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessLogic\HttpCallTimeSpanCalculator.cs" />
+    <Compile Include="BusinessLogic\UrlCreatorForMassHttpGets.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
