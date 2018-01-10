@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -8,27 +7,26 @@ using Newtonsoft.Json.Linq;
 
 namespace Gcc.FlashPoint.Core.BusinessLogic
 {
-    public class UrlCreatorForMassHttpGets
+    public class UrlCreatorForHttpGet
     {
         public string Url { get; protected set; }
 
-        public UrlCreatorForMassHttpGets(string url, string jsonDataForUrlSegments, string jsonDataForQueryStrings)
+        public UrlCreatorForHttpGet(string url, JObject jsonDataForUrlSegments, JObject jsonDataForQueryStrings)
         {
             Url = url;
-            if (!string.IsNullOrEmpty(jsonDataForUrlSegments))
+            if (jsonDataForUrlSegments != null)
             {
                 ExtendUrl(jsonDataForUrlSegments, UrlParameterAppendOperationType.UrlSegment); 
             }
-            if (!string.IsNullOrEmpty(jsonDataForQueryStrings))
+            if (jsonDataForQueryStrings != null)
             {
                 ExtendUrl(jsonDataForQueryStrings, UrlParameterAppendOperationType.QueryString);
             }
         }
 
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        private void ExtendUrl(string dataForUrls, UrlParameterAppendOperationType operationType)
+        private void ExtendUrl(JObject dataObjct, UrlParameterAppendOperationType operationType)
         {
-            JObject dataObjct = JObject.Parse(dataForUrls);
             var properties = dataObjct.Properties();
             StringBuilder builder = new StringBuilder(Url);
 
