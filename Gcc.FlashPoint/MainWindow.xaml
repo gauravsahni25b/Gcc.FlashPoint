@@ -18,7 +18,7 @@
             <RowDefinition Height="50px"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label  Grid.Row="0" Content="GCC FlashPoint" VerticalAlignment="Center" HorizontalAlignment="Center" ></Label>
+        <Label  Grid.Row="0" Content="GCC Flash Point" VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
         <TabControl Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}">
             <TabItem TabIndex="0" Header="Get">
                 <Grid>
