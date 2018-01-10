@@ -37,6 +37,10 @@ namespace Gcc.FlashPoint
                     _queryStringJsonArray = value;
                     OnPropertyChanged(nameof(QueryStringJsonArray));
                     Operation.RaiseCanExecuteChanged();
+                    if (!ValidateJsonArray(value))
+                    {
+                        throw new ArgumentException("Invalid JSON Array!");
+                    }
                 }
             }
         }
@@ -50,6 +54,10 @@ namespace Gcc.FlashPoint
                     _urlSegmentJsonArray = value;
                     OnPropertyChanged(nameof(UrlSegmentJsonArray));
                     Operation.RaiseCanExecuteChanged();
+                    if (!ValidateJsonArray(value))
+                    {
+                        throw new ArgumentException("Invalid JSON Array!");
+                    }
                 }
             }
         }
@@ -90,6 +98,10 @@ namespace Gcc.FlashPoint
                     _jsonBodiesForPost = value;
                     OnPropertyChanged(nameof(JsonBodiesForPost));
                     Operation.RaiseCanExecuteChanged();
+                    if (!ValidateJsonArray(value))
+                    {
+                        throw new ArgumentException("Invalid JSON Array!");
+                    }
                 }
             }
         }
@@ -114,38 +126,23 @@ namespace Gcc.FlashPoint
         private bool CanExecuteOperation()
         {
             return OperationMode == OperationMode.GetMode
-                ? ValidateBaseUrl() && ValidateGetParams()
-                : ValidateBaseUrl() && ValidatePostParams();
+                ? ValidateBaseUrl() && ValidateJsonArray(QueryStringJsonArray) && ValidateJsonArray(UrlSegmentJsonArray)
+                : ValidateBaseUrl() && ValidateJsonArray(JsonBodiesForPost);
         }
 
-        private bool ValidatePostParams()
+        private bool ValidateJsonArray(string jsonArray)
         {
             try
             {
-                var postBodies = JArray.Parse(JsonBodiesForPost);
-                return postBodies != null;
+                var jsonArrayObject = JArray.Parse(jsonArray);
+                return jsonArrayObject != null;
             }
             catch
             {
                 return false;
             }
         }
-
-        private bool ValidateGetParams()
-        {
-            try
-            {
-                var urlSegments = JArray.Parse(UrlSegmentJsonArray);
-                var queryStringSegments = JArray.Parse(QueryStringJsonArray);
-                return urlSegments != null && queryStringSegments != null;
-                ;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
+        
         private bool ValidateBaseUrl()
         {
             return Uri.TryCreate(BaseUrl, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
@@ -181,7 +178,7 @@ namespace Gcc.FlashPoint
         {
             TimeSpan total = new TimeSpan(0);
             timeSpans.ToList().ForEach(a => total += a);
-            ResultSentence = $"Number of Queries Ran = {timeSpans.Count()}. \nTotal Time Taken = {total}";
+            ResultSentence = $"Number of Queries Ran = {timeSpans.Count()}. \nTotal Time Taken = {total}.";
         }
     }
 
