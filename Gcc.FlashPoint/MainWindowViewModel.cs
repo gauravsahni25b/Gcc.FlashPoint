@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Gcc.FlashPoint.Core.BusinessLogic;
 using Gcc.FlashPoint.Infrastructure;
+using Newtonsoft.Json.Linq;
 using Prism.Commands;
 
 namespace Gcc.FlashPoint
@@ -16,10 +17,10 @@ namespace Gcc.FlashPoint
             //Initialize Commands
             Operation = new DelegateCommand(ExecuteOperation, CanExecuteOperation);
         }
-        private string _queryStringJsonArray;
-        private string _urlSegmentJsonArray;
-        private string _jsonBodiesForPost;
-        private string _baseUrl;
+        private string _queryStringJsonArray = String.Empty;
+        private string _urlSegmentJsonArray = String.Empty;
+        private string _jsonBodiesForPost = String.Empty;
+        private string _baseUrl = "http://";
         private int _selectedTabIndex;
         
         //Props
@@ -72,6 +73,7 @@ namespace Gcc.FlashPoint
                 {
                     _selectedTabIndex = value;
                     OnPropertyChanged(nameof(SelectedTabIndex));
+                    Operation.RaiseCanExecuteChanged();
                 }
             }
         }
@@ -95,8 +97,44 @@ namespace Gcc.FlashPoint
         public DelegateCommand Operation { get; set; }
         private bool CanExecuteOperation()
         {
-            return true;
+            return OperationMode == OperationMode.GetMode
+                ? ValidateBaseUrl() && ValidateGetParams()
+                : ValidateBaseUrl() && ValidatePostParams();
         }
+
+        private bool ValidatePostParams()
+        {
+            try
+            {
+                var postBodies = JArray.Parse(JsonBodiesForPost);
+                return postBodies != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool ValidateGetParams()
+        {
+            try
+            {
+                var urlSegments = JArray.Parse(UrlSegmentJsonArray);
+                var queryStringSegments = JArray.Parse(QueryStringJsonArray);
+                return urlSegments != null && queryStringSegments != null;
+                ;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool ValidateBaseUrl()
+        {
+            return Uri.TryCreate(BaseUrl, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+        }
+
         private async void ExecuteOperation()
         {
             Results.Clear();
