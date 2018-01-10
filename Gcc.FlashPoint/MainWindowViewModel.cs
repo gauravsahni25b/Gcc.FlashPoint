@@ -95,15 +95,14 @@ namespace Gcc.FlashPoint
         public DelegateCommand Operation { get; set; }
         private bool CanExecuteOperation()
         {
-            //TODO write some validation logic so see whether the entered JSON is a valid JSON Array or not!
-            //Validate QueryStringJsonArray and UrlSegmentJsonArray for GET ||||| JsonBodiesForPost for Post OperationMode
-            Debug.WriteLine("I am going to validate whether the added imput is a valid JSON array or not??");
             return true;
         }
         private async void ExecuteOperation()
         {
+            Results.Clear();
             if (OperationMode == OperationMode.GetMode)
             {
+                SelectedTabIndex = 2;
                 UrlGeneratorForMassHttpGets urlGenerator = new UrlGeneratorForMassHttpGets(BaseUrl, QueryStringJsonArray, UrlSegmentJsonArray);
                 HttpCallTimeSpanCalculator timeSpanCalculator = new HttpCallTimeSpanCalculator();
                 foreach (string url in urlGenerator.Urls)
@@ -113,6 +112,7 @@ namespace Gcc.FlashPoint
             }
             else
             {
+                SelectedTabIndex = 2;
                 HttpCallTimeSpanCalculator timeSpanCalculator = new HttpCallTimeSpanCalculator();
                 var timeSpans = await timeSpanCalculator.MeasureNPostCalls(BaseUrl, JsonBodiesForPost);
                 foreach (var timeSpan in timeSpans)

@@ -82,7 +82,12 @@
             </TabItem>
             <TabItem TabIndex="2" Header="Results">
                 <Grid>
-                    <Label Content="This is Results" VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
+                    <DataGrid ItemsSource="{Binding Results, Mode=TwoWay}" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Url" Binding="{Binding Url}" Width="*" />
+                            <DataGridTextColumn Header="Time Taken" Binding="{Binding TimeTaken}" Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </TabItem>
         </TabControl>
