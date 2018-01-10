@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Gcc.FlashPoint.Core.BusinessLogic;
@@ -20,6 +22,7 @@ namespace Gcc.FlashPoint
         private string _queryStringJsonArray = String.Empty;
         private string _urlSegmentJsonArray = String.Empty;
         private string _jsonBodiesForPost = String.Empty;
+        private string _resultSentence = String.Empty;
         private string _baseUrl = "http://";
         private int _selectedTabIndex;
         
@@ -91,6 +94,19 @@ namespace Gcc.FlashPoint
             }
         }
 
+        public string ResultSentence
+        {
+            get => _resultSentence;
+            set
+            {
+                if (_resultSentence != value)
+                {
+                    _resultSentence = value;
+                    OnPropertyChanged(nameof(ResultSentence));
+                }
+            }
+        }
+
         public ObservableCollection<ResultGridItem> Results { get; set; } = new ObservableCollection<ResultGridItem>();
 
         //Commands
@@ -147,6 +163,7 @@ namespace Gcc.FlashPoint
                 {
                     Results.Add(new ResultGridItem(url, await timeSpanCalculator.MeasureGetCall(url)));
                 }
+                PopulateResultSentence(Results.Select(a => a.TimeTaken));
             }
             else
             {
@@ -157,7 +174,14 @@ namespace Gcc.FlashPoint
                 {
                     Results.Add(new ResultGridItem(BaseUrl, timeSpan));
                 }
+                PopulateResultSentence(Results.Select(a => a.TimeTaken));
             }
+        }
+        private void PopulateResultSentence(IEnumerable<TimeSpan> timeSpans)
+        {
+            TimeSpan total = new TimeSpan(0);
+            timeSpans.ToList().ForEach(a => total += a);
+            ResultSentence = $"Number of Queries Ran = {timeSpans.Count()}. \nTotal Time Taken = {total}";
         }
     }
 
