@@ -43,11 +43,11 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Label VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0" Content="Base URL"></Label>
-                        <TextBox Grid.Row="0" Grid.Column="1" ToolTip="Order Matters!" Text="{Binding BaseUrl, Mode=TwoWay}"></TextBox>
+                        <TextBox Grid.Row="0" Grid.Column="1" ToolTip="Order Matters!" Text="{Binding BaseUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                         <Label VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0" Content="Json Array for URL Segments" ToolTip="Order Matters!"></Label>
                         <Label VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Content="Json Array for Query Strings" ToolTip="Order Matters!"></Label>
-                        <TextBox Grid.Row="1" Grid.Column="1" ToolTip="Order Matters!" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" Text="{Binding UrlSegmentJsonArray, Mode=TwoWay}"></TextBox>
-                        <TextBox Grid.Row="2" Grid.Column="1" ToolTip="Order Matters!" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" Text="{Binding QueryStringJsonArray, Mode=TwoWay}"></TextBox>
+                        <TextBox Grid.Row="1" Grid.Column="1" ToolTip="Order Matters!" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" Text="{Binding UrlSegmentJsonArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                        <TextBox Grid.Row="2" Grid.Column="1" ToolTip="Order Matters!" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" Text="{Binding QueryStringJsonArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     </Grid>
                 </Grid>
             </TabItem>
@@ -73,10 +73,10 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Label VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0" Content="Base URL"></Label>
-                        <TextBox Grid.Row="0" Grid.Column="1" ToolTip="Order Matters!" Text="{Binding BaseUrl, Mode=TwoWay}"></TextBox>
+                        <TextBox Grid.Row="0" Grid.Column="1" ToolTip="Order Matters!" Text="{Binding BaseUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 
                         <Label VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0" Content="Json Array for Query Strings" ToolTip="Order Matters!"></Label>
-                        <TextBox Grid.Row="1" Grid.Column="1" ToolTip="Order Matters!" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" Text="{Binding JsonBodiesForPost, Mode=TwoWay}"></TextBox>
+                        <TextBox Grid.Row="1" Grid.Column="1" ToolTip="Order Matters!" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" Text="{Binding JsonBodiesForPost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     </Grid>
                 </Grid>
             </TabItem>
