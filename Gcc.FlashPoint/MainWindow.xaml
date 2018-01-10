@@ -6,24 +6,81 @@
         xmlns:local="clr-namespace:Gcc.FlashPoint"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525"
-        xmlns:flashPoint="clr-namespace:Gcc.FlashPoint">
+        xmlns:flashPoint="clr-namespace:Gcc.FlashPoint"
+        MinWidth="1000"
+        MinHeight="1000">
     <Window.DataContext>
         <flashPoint:MainWindowViewModel/>
     </Window.DataContext>
     
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="50px"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="8*"/>
         </Grid.RowDefinitions>
-        <Label Content="GCC FlashPoint" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0"></Label>
-        <TabControl Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex}">
-            <TabItem TabIndex="0" Header="Input">
+        <Label  Grid.Row="0" Content="GCC FlashPoint" VerticalAlignment="Center" HorizontalAlignment="Center" ></Label>
+        <TabControl Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}">
+            <TabItem TabIndex="0" Header="Get">
                 <Grid>
-                    <Label Content="This is Input" VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50px"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Row="1" Grid.Column="1" Margin="5" Command="{Binding Operation}"  Content="Execute"></Button>
+                    <ProgressBar Grid.Row="1" Grid.Column="0" Margin="5"></ProgressBar>
+                    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  Margin="50px">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50px"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0" Content="Base URL"></Label>
+                        <TextBox Grid.Row="0" Grid.Column="1" ToolTip="Order Matters!" Text="{Binding BaseUrl, Mode=TwoWay}"></TextBox>
+                        <Label VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0" Content="Json Array for URL Segments" ToolTip="Order Matters!"></Label>
+                        <Label VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Content="Json Array for Query Strings" ToolTip="Order Matters!"></Label>
+                        <TextBox Grid.Row="1" Grid.Column="1" ToolTip="Order Matters!" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" Text="{Binding UrlSegmentJsonArray, Mode=TwoWay}"></TextBox>
+                        <TextBox Grid.Row="2" Grid.Column="1" ToolTip="Order Matters!" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" Text="{Binding QueryStringJsonArray, Mode=TwoWay}"></TextBox>
+                    </Grid>
                 </Grid>
             </TabItem>
-            <TabItem TabIndex="1" Header="Results">
+            <TabItem TabIndex="1" Header="Post">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50px"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Row="1" Grid.Column="1" Margin="5" Command="{Binding Operation}"  Content="Execute"></Button>
+                    <ProgressBar Grid.Row="1" Grid.Column="0" Margin="5"></ProgressBar>
+                    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="50px">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50px"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0" Content="Base URL"></Label>
+                        <TextBox Grid.Row="0" Grid.Column="1" ToolTip="Order Matters!" Text="{Binding BaseUrl, Mode=TwoWay}"></TextBox>
+
+                        <Label VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0" Content="Json Array for Query Strings" ToolTip="Order Matters!"></Label>
+                        <TextBox Grid.Row="1" Grid.Column="1" ToolTip="Order Matters!" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" Text="{Binding JsonBodiesForPost, Mode=TwoWay}"></TextBox>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem TabIndex="2" Header="Results">
                 <Grid>
                     <Label Content="This is Results" VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
                 </Grid>
