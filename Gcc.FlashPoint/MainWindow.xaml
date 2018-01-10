@@ -5,14 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gcc.FlashPoint"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525"
+        xmlns:flashPoint="clr-namespace:Gcc.FlashPoint">
+    <Window.DataContext>
+        <flashPoint:MainWindowViewModel/>
+    </Window.DataContext>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="8*"/>
         </Grid.RowDefinitions>
         <Label Content="GCC FlashPoint" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0"></Label>
-        <TabControl Grid.Row="1">
+        <TabControl Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex}">
             <TabItem TabIndex="0" Header="Input">
                 <Grid>
                     <Label Content="This is Input" VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
