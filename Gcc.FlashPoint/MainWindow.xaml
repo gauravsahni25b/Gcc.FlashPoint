@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gcc.FlashPoint"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525"
+        Title="Flash Point" Height="350" Width="525"
         xmlns:flashPoint="clr-namespace:Gcc.FlashPoint"
         MinWidth="1000"
         MinHeight="1000">
@@ -31,7 +31,6 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Grid.Row="1" Grid.Column="1" Margin="5" Command="{Binding Operation}"  Content="Execute"></Button>
-                    <Label Content="{Binding ResultSentence}" Grid.Row="1" Grid.Column="0" Margin="5"></Label>
                     <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  Margin="50px">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50px"/>
@@ -62,7 +61,6 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Grid.Row="1" Grid.Column="1" Margin="5" Command="{Binding Operation}"  Content="Execute"></Button>
-                    <Label Content="{Binding ResultSentence}" Grid.Row="1" Grid.Column="0" Margin="5"></Label>
                     <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="50px">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50px"/>
@@ -82,12 +80,17 @@
             </TabItem>
             <TabItem TabIndex="2" Header="Results">
                 <Grid>
-                    <DataGrid ItemsSource="{Binding Results, Mode=TwoWay}" AutoGenerateColumns="False">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50px"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding Results, Mode=TwoWay}" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Url" Binding="{Binding Url}" Width="*" />
                             <DataGridTextColumn Header="Time Taken" Binding="{Binding TimeTaken}" Width="*" />
                         </DataGrid.Columns>
                     </DataGrid>
+                    <Label Content="{Binding ResultSentence}" Grid.Row="0" Margin="5"></Label>
                 </Grid>
             </TabItem>
         </TabControl>
