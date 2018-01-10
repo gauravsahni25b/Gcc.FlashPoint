@@ -1,4 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Gcc.FlashPoint.Core.BusinessLogic;
 using Gcc.FlashPoint.Infrastructure;
 using Prism.Commands;
 
@@ -84,6 +89,8 @@ namespace Gcc.FlashPoint
             }
         }
 
+        public ObservableCollection<ResultGridItem> Results { get; set; } = new ObservableCollection<ResultGridItem>();
+
         //Commands
         public DelegateCommand Operation { get; set; }
         private bool CanExecuteOperation()
@@ -93,11 +100,26 @@ namespace Gcc.FlashPoint
             Debug.WriteLine("I am going to validate whether the added imput is a valid JSON array or not??");
             return true;
         }
-        private void ExecuteOperation()
+        private async void ExecuteOperation()
         {
-            //TODO Execute Business Logic
-            SelectedTabIndex = 1;
-            Debug.WriteLine("I am Executing What Operation Mode says!");
+            if (OperationMode == OperationMode.GetMode)
+            {
+                UrlGeneratorForMassHttpGets urlGenerator = new UrlGeneratorForMassHttpGets(BaseUrl, QueryStringJsonArray, UrlSegmentJsonArray);
+                HttpCallTimeSpanCalculator timeSpanCalculator = new HttpCallTimeSpanCalculator();
+                foreach (string url in urlGenerator.Urls)
+                {
+                    Results.Add(new ResultGridItem(url, await timeSpanCalculator.MeasureGetCall(url)));
+                }
+            }
+            else
+            {
+                HttpCallTimeSpanCalculator timeSpanCalculator = new HttpCallTimeSpanCalculator();
+                var timeSpans = await timeSpanCalculator.MeasureNPostCalls(BaseUrl, JsonBodiesForPost);
+                foreach (var timeSpan in timeSpans)
+                {
+                    Results.Add(new ResultGridItem(BaseUrl, timeSpan));
+                }
+            }
         }
     }
 
@@ -105,5 +127,16 @@ namespace Gcc.FlashPoint
     {
         GetMode,
         PostMode
+    }
+
+    public class ResultGridItem
+    {
+        public ResultGridItem(string url, TimeSpan timeTaken)
+        {
+            Url = url;
+            TimeTaken = timeTaken;
+        }
+        public string Url { get; protected set; }
+        public TimeSpan TimeTaken { get; protected set; }
     }
 }
