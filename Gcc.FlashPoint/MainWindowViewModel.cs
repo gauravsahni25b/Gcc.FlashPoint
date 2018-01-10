@@ -14,9 +14,8 @@ namespace Gcc.FlashPoint
         private string _queryStringJsonArray;
         private string _urlSegmentJsonArray;
         private string _jsonBodiesForPost;
-        private OperationMode _operationMode = OperationMode.GetMode;
         private string _baseUrl;
-        private int _selectedTabIndex = 0;
+        private int _selectedTabIndex;
         
         //Props
         public string QueryStringJsonArray
@@ -45,19 +44,7 @@ namespace Gcc.FlashPoint
                 }
             }
         }
-        public OperationMode OperationMode
-        {
-            get => _operationMode;
-            set
-            {
-                if (_operationMode != value)
-                {
-                    _operationMode = value;
-                    OnPropertyChanged(nameof(OperationMode));
-                    Operation.RaiseCanExecuteChanged();
-                }
-            }
-        }
+        public OperationMode OperationMode => _selectedTabIndex == 0 ? OperationMode.GetMode : OperationMode.PostMode;
         public string BaseUrl
         {
             get => _baseUrl;
@@ -79,7 +66,7 @@ namespace Gcc.FlashPoint
                 if (_selectedTabIndex != value)
                 {
                     _selectedTabIndex = value;
-                    OnPropertyChanged(nameof(_selectedTabIndex));
+                    OnPropertyChanged(nameof(SelectedTabIndex));
                 }
             }
         }
@@ -101,11 +88,15 @@ namespace Gcc.FlashPoint
         public DelegateCommand Operation { get; set; }
         private bool CanExecuteOperation()
         {
+            //TODO write some validation logic so see whether the entered JSON is a valid JSON Array or not!
+            //Validate QueryStringJsonArray and UrlSegmentJsonArray for GET ||||| JsonBodiesForPost for Post OperationMode
             Debug.WriteLine("I am going to validate whether the added imput is a valid JSON array or not??");
             return true;
         }
         private void ExecuteOperation()
         {
+            //TODO Execute Business Logic
+            SelectedTabIndex = 1;
             Debug.WriteLine("I am Executing What Operation Mode says!");
         }
     }
