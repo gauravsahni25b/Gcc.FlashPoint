@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Gcc.FlashPoint.Core.BusinessLogic;
 using Gcc.FlashPoint.Infrastructure;
@@ -150,28 +152,36 @@ namespace Gcc.FlashPoint
 
         private async void ExecuteOperation()
         {
-            Results.Clear();
-            if (OperationMode == OperationMode.GetMode)
+            try
             {
-                SelectedTabIndex = 2;
-                UrlGeneratorForMassHttpGets urlGenerator = new UrlGeneratorForMassHttpGets(BaseUrl, QueryStringJsonArray, UrlSegmentJsonArray);
-                HttpCallTimeSpanCalculator timeSpanCalculator = new HttpCallTimeSpanCalculator();
-                foreach (string url in urlGenerator.Urls)
+                Results.Clear();
+                if (OperationMode == OperationMode.GetMode)
                 {
-                    Results.Add(new ResultGridItem(url, await timeSpanCalculator.MeasureGetCall(url)));
+                    SelectedTabIndex = 2;
+                    UrlGeneratorForMassHttpGets urlGenerator = new UrlGeneratorForMassHttpGets(BaseUrl, QueryStringJsonArray, UrlSegmentJsonArray);
+                    HttpCallTimeSpanCalculator timeSpanCalculator = new HttpCallTimeSpanCalculator();
+                    foreach (string url in urlGenerator.Urls)
+                    {
+                        Results.Add(new ResultGridItem(url, await timeSpanCalculator.MeasureGetCall(url)));
+                    }
+                    PopulateResultSentence(Results.Select(a => a.TimeTaken));
                 }
-                PopulateResultSentence(Results.Select(a => a.TimeTaken));
+                else
+                {
+                    SelectedTabIndex = 2;
+                    HttpCallTimeSpanCalculator timeSpanCalculator = new HttpCallTimeSpanCalculator();
+                    var timeSpans = await timeSpanCalculator.MeasureNPostCalls(BaseUrl, JsonBodiesForPost);
+                    foreach (var timeSpan in timeSpans)
+                    {
+                        Results.Add(new ResultGridItem(BaseUrl, timeSpan));
+                    }
+                    PopulateResultSentence(Results.Select(a => a.TimeTaken));
+                }
             }
-            else
+            catch (HttpRequestException)
             {
-                SelectedTabIndex = 2;
-                HttpCallTimeSpanCalculator timeSpanCalculator = new HttpCallTimeSpanCalculator();
-                var timeSpans = await timeSpanCalculator.MeasureNPostCalls(BaseUrl, JsonBodiesForPost);
-                foreach (var timeSpan in timeSpans)
-                {
-                    Results.Add(new ResultGridItem(BaseUrl, timeSpan));
-                }
-                PopulateResultSentence(Results.Select(a => a.TimeTaken));
+                SelectedTabIndex = 0;
+                MessageBox.Show("FlashPoint was not able to contact the server.", "Could Not Find Server", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         private void PopulateResultSentence(IEnumerable<TimeSpan> timeSpans)
