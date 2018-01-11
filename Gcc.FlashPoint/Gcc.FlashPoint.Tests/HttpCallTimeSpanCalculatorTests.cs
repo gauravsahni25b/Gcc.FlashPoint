@@ -15,7 +15,7 @@ namespace Gcc.FlashPoint.Tests
         {
             HttpCallTimeSpanCalculator timeCalculator = new HttpCallTimeSpanCalculator();
             var result = timeCalculator.MeasureGetCall("http://designbuilderapi.localtest.me/system/health-check").Result;
-            Debug.WriteLine($"Resultant Time : {result}");
+            Debug.WriteLine($"Resultant Time : {result.TimeTaken} | HttpStatusCode : {result.StatusCode}");
             result.Should().NotBe(new TimeSpan(0));
         }
 
@@ -47,7 +47,7 @@ namespace Gcc.FlashPoint.Tests
                     ]
                 }";
             var result = timeCalculator.MeasurePostCall("http://designbuilderapi.localtest.me/window-treatments/sessions", data).Result;
-            Debug.WriteLine($"Resultant Time : {result}");
+            Debug.WriteLine($"Resultant Time : {result.TimeTaken} | HttpStatusCode : {result.StatusCode}");
             result.Should().NotBe(new TimeSpan(0));
         }
 
@@ -106,8 +106,7 @@ namespace Gcc.FlashPoint.Tests
             var result = timeCalculator.MeasureNPostCalls("http://designbuilderapi.localtest.me/window-treatments/sessions", dataArray).Result;
             result.ToList().ForEach(a =>
             {
-                Debug.WriteLine($"Resultant Time : {a}");
-                a.Should().NotBe(new TimeSpan(0));
+                Debug.WriteLine($"Resultant Time : {a.TimeTaken} | HttpStatusCode : {a.StatusCode}");
             });
             result.Should().HaveCount(2);
         }
@@ -119,8 +118,7 @@ namespace Gcc.FlashPoint.Tests
             var result = timeCalculator.MeasureNGetCalls("http://designbuilderapi.localtest.me/system/health-check", 2).Result;
             result.ToList().ForEach(a =>
             {
-                Debug.WriteLine($"Resultant Time : {a}");
-                a.Should().NotBe(new TimeSpan(0));
+                Debug.WriteLine($"Resultant Time : {a.TimeTaken} | HttpStatusCode : {a.StatusCode}");
             });
             result.Should().HaveCount(2);
         }

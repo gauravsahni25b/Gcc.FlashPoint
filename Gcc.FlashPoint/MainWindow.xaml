@@ -88,6 +88,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Url" Binding="{Binding Url}" Width="*" />
                             <DataGridTextColumn Header="Time Taken" Binding="{Binding TimeTaken}" Width="*" />
+                            <DataGridTextColumn Header="Status Code" Binding="{Binding StatusCode}" Width="*" />
                         </DataGrid.Columns>
                     </DataGrid>
                     <Label Content="{Binding ResultSentence}" Grid.Row="0" Margin="5"></Label>

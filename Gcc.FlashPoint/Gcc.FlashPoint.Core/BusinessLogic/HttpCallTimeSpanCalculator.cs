@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
@@ -18,9 +19,9 @@ namespace Gcc.FlashPoint.Core.BusinessLogic
             _client = new HttpClient();
         }
 
-        public async Task<IEnumerable<TimeSpan>> MeasureNGetCalls(string path, int n)
+        public async Task<IEnumerable<FlashPointHttpResponse>> MeasureNGetCalls(string path, int n)
         {
-            List<TimeSpan> resultCollection = new List<TimeSpan>();
+            List<FlashPointHttpResponse> resultCollection = new List<FlashPointHttpResponse>();
             for (int i = 0; i < n; i++)
             {
                 resultCollection.Add(await MeasureGetCall(path));
@@ -28,10 +29,10 @@ namespace Gcc.FlashPoint.Core.BusinessLogic
             return resultCollection;
         }
 
-        public async Task<IEnumerable<TimeSpan>> MeasureNPostCalls(string path, string jsonArray)
+        public async Task<IEnumerable<FlashPointHttpResponse>> MeasureNPostCalls(string path, string jsonArray)
         {
             var jsonBodies = JArray.Parse(jsonArray);
-            List<TimeSpan> resultCollection = new List<TimeSpan>();
+            List<FlashPointHttpResponse> resultCollection = new List<FlashPointHttpResponse>();
             for (int i = 0; i < jsonBodies.Count(); i++)
             {
                 resultCollection.Add(await MeasurePostCall(path, jsonBodies[i]));
@@ -39,46 +40,44 @@ namespace Gcc.FlashPoint.Core.BusinessLogic
             return resultCollection;
         }
 
-        public async Task<TimeSpan> MeasureGetCall(string path)
+        public async Task<FlashPointHttpResponse> MeasureGetCall(string path)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            HttpResponseMessage response = await _client.GetAsync(path);
-            watch.Stop();
-            if (response.IsSuccessStatusCode)
+            using (HttpResponseMessage response = await _client.GetAsync(path))
             {
-                return watch.Elapsed;
+                watch.Stop();
+                return new FlashPointHttpResponse(response.StatusCode, watch.Elapsed);
             }
-            response.Dispose();
-            return new TimeSpan(0);
         }
 
-        public async Task<TimeSpan> MeasurePostCall(string path, string jsonBody)
+        public async Task<FlashPointHttpResponse> MeasurePostCall(string path, string jsonBody)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            HttpResponseMessage response = await _client.PostAsJsonAsync(path, JObject.Parse(jsonBody));
-            watch.Stop();
-            if (response.IsSuccessStatusCode)
-            {
-                return watch.Elapsed;
-            }
-            response.Dispose();
-            return new TimeSpan(0);
+            return await MeasurePostCall(path, JObject.Parse(jsonBody));
         }
 
-        public async Task<TimeSpan> MeasurePostCall(string path, JToken jsonBody)
+        public async Task<FlashPointHttpResponse> MeasurePostCall(string path, JToken jsonBody)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            HttpResponseMessage response = await _client.PostAsJsonAsync(path, jsonBody);
-            watch.Stop();
-            if (response.IsSuccessStatusCode)
+            using (HttpResponseMessage response = await _client.PostAsJsonAsync(path, jsonBody))
             {
-                return watch.Elapsed;
+                watch.Stop();
+                return new FlashPointHttpResponse(response.StatusCode, watch.Elapsed);
             }
-            response.Dispose();
-            return new TimeSpan(0);
         }
+    }
+
+    public class FlashPointHttpResponse
+    {
+        public FlashPointHttpResponse(HttpStatusCode statusCode, TimeSpan timeTaken)
+        {
+            StatusCode = statusCode;
+            TimeTaken = timeTaken;
+        }
+        public HttpStatusCode StatusCode { get; protected set; }
+        public TimeSpan TimeTaken { get; protected set; }
     }
 }

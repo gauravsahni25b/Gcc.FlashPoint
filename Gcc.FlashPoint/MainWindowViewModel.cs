@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
@@ -200,12 +201,14 @@ namespace Gcc.FlashPoint
 
     public class ResultGridItem
     {
-        public ResultGridItem(string url, TimeSpan timeTaken)
+        public ResultGridItem(string url, FlashPointHttpResponse httpResponse)
         {
             Url = url;
-            TimeTaken = timeTaken;
+            TimeTaken = httpResponse.TimeTaken;
+            StatusCode = httpResponse.StatusCode;
         }
         public string Url { get; protected set; }
         public TimeSpan TimeTaken { get; protected set; }
+        public HttpStatusCode StatusCode { get; set; }
     }
 }
